@@ -1,20 +1,37 @@
-import React, { useState } from 'react'
-import OtpInput from 'react-otp-input';
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { verifyOTP } from '../services/otpService';
 import { validateOTP } from '../validations/otpValidation';
 
 const Otp = () => {
     const navigate = useNavigate();
-    const [otp, setOtp] = useState('');
+    const [otp, setOtp] = useState(Array(6).fill(''));
+    const inputRefs = useRef([]);
     const [errors, setErrors] = useState({});
 
+    const handleInputChange = (index, value) => {
+
+        const newOtp = [...otp];
+        newOtp[index] = value;
+        setOtp(newOtp);
+        if (value !== '' && index < 6 - 1) {
+            inputRefs.current[index + 1].focus();
+        }
+
+    };
+
+    const handleInputKeyDown = (index, e) => {
+        if (e.key === 'Backspace' && index > 0 && otp[index] === '') {
+            inputRefs.current[index - 1].focus();
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = validateOTP(otp);
+        const otpString = otp.join('');
+        const validationErrors = validateOTP(otpString);
         if (Object.keys(validationErrors).length === 0) {
             try {
-                await verifyOTP(otp);
+                await verifyOTP(otpString);
                 setOtp('');
                 navigate('/success');
             } catch (error) {
@@ -27,20 +44,26 @@ const Otp = () => {
         } else {
             setErrors(validationErrors);
         }
+
     };
 
     return (
         <div>
             <h6 className='blue'>Verification code:</h6>
             <div id="otp" className="inputs d-flex flex-row justify-content-center mt-2">
-                <OtpInput
-                    value={otp}
-                    onChange={setOtp}
-                    numInputs={6}
-                    renderSeparator={<span> </span>}
-                    inputType="text"
-                    renderInput={(props) => <input {...props} className='m-2 text-center form-control rounded' />}
-                />
+                {otp.map((value, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        value={value}
+                        onChange={(e) => handleInputChange(index, e.target.value)}
+                        onKeyDown={(e) => handleInputKeyDown(index, e)}
+                        ref={(inputRef) => (inputRefs.current[index] = inputRef)}
+                        maxLength={1}
+                        className='m-2 text-center form-control rounded'
+                    />
+                ))}
+
 
             </div>
             {Array.isArray(errors.otp) && errors.otp.map((error, index) => (
