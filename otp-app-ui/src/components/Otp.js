@@ -8,6 +8,7 @@ const Otp = () => {
     const [otp, setOtp] = useState(Array(6).fill(''));
     const inputRefs = useRef([]);
     const [errors, setErrors] = useState({});
+    const [invalidInputs, setInvalidInputs] = useState(Array(6).fill(false));
 
     const handleInputChange = (index, value) => {
 
@@ -18,6 +19,9 @@ const Otp = () => {
             inputRefs.current[index + 1].focus();
         }
 
+        const newInvalidInputs = [...invalidInputs];
+        newInvalidInputs[index] = (!/^\d+$/.test(value)) ? true : false;
+        setInvalidInputs(newInvalidInputs);
     };
 
     const handleInputKeyDown = (index, e) => {
@@ -60,7 +64,7 @@ const Otp = () => {
                         onKeyDown={(e) => handleInputKeyDown(index, e)}
                         ref={(inputRef) => (inputRefs.current[index] = inputRef)}
                         maxLength={1}
-                        className='m-2 text-center form-control rounded'
+                        className={'m-2 text-center form-control rounded ' + '' + (invalidInputs[index] ? 'invalid' : '')}
                     />
                 ))}
 
