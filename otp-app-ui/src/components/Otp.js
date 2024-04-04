@@ -64,7 +64,7 @@ const Otp = () => {
                         onKeyDown={(e) => handleInputKeyDown(index, e)}
                         ref={(inputRef) => (inputRefs.current[index] = inputRef)}
                         maxLength={1}
-                        className={'m-2 text-center form-control rounded ' + '' + (invalidInputs[index] ? 'invalid' : '')}
+                        className={`m-2 text-center form-control rounded ${invalidInputs[index] ? 'invalid' : ''}`}
                     />
                 ))}
 
