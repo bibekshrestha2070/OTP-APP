@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route element={<MainLayout />}>
-          <Route exact path="/" element={<Otp />} />
+          <Route exact path="/" element={<Otp numInputs={6} />} />
           <Route path="/success" element={<Success />} />
         </Route>
       </Routes>

@@ -4,19 +4,19 @@ import { verifyOTP } from '../services/otpService';
 import { validateOTP } from '../validations/otpValidation';
 import OtpInput from './OtpInput';
 
-const Otp = () => {
+const Otp = ({ numInputs }) => {
     const navigate = useNavigate();
-    const [otp, setOtp] = useState(Array(6).fill(''));
+    const [otp, setOtp] = useState(Array(numInputs).fill(''));
     const inputRefs = useRef([]);
     const [errors, setErrors] = useState({});
-    const [invalidInputs, setInvalidInputs] = useState(Array(6).fill(false));
+    const [invalidInputs, setInvalidInputs] = useState(Array(numInputs).fill(false));
 
     const handleInputChange = (index, value) => {
 
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
-        if (value !== '' && index < 6 - 1) {
+        if (value !== '' && index < numInputs - 1) {
             inputRefs.current[index + 1].focus();
         }
 
@@ -30,6 +30,22 @@ const Otp = () => {
             inputRefs.current[index - 1].focus();
         }
     };
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text/plain').trim();
+        const otpArray = pastedData.split('').slice(0, numInputs);
+        const newOtp = [...otp];
+        const newInvalidInputs = [...invalidInputs];
+        otpArray.forEach((value, index) => {
+            newOtp[index] = value;
+            newInvalidInputs[index] = (!/^\d+$/.test(value)) ? true : false;
+        });
+        setInvalidInputs(newInvalidInputs);
+        console.log(newInvalidInputs);
+        setOtp(newOtp);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const otpString = otp.join('');
@@ -62,6 +78,7 @@ const Otp = () => {
                     onKeyDown={handleInputKeyDown}
                     inputRefs={inputRefs}
                     invalidInputs={invalidInputs}
+                    onPaste={handlePaste}
                 />
             </div>
             {Array.isArray(errors.otp) && errors.otp.map((error, index) => (
