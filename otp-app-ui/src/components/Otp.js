@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { verifyOTP } from '../services/otpService';
 import { validateOTP } from '../validations/otpValidation';
+import OtpInput from './OtpInput';
 
 const Otp = () => {
     const navigate = useNavigate();
@@ -55,20 +56,13 @@ const Otp = () => {
         <div>
             <h6 className='blue'>Verification code:</h6>
             <div id="otp" className="inputs d-flex flex-row justify-content-center mt-2">
-                {otp.map((value, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        value={value}
-                        onChange={(e) => handleInputChange(index, e.target.value)}
-                        onKeyDown={(e) => handleInputKeyDown(index, e)}
-                        ref={(inputRef) => (inputRefs.current[index] = inputRef)}
-                        maxLength={1}
-                        className={`m-2 text-center form-control rounded ${invalidInputs[index] ? 'invalid' : ''}`}
-                    />
-                ))}
-
-
+                <OtpInput
+                    otp={otp}
+                    onChange={handleInputChange}
+                    onKeyDown={handleInputKeyDown}
+                    inputRefs={inputRefs}
+                    invalidInputs={invalidInputs}
+                />
             </div>
             {Array.isArray(errors.otp) && errors.otp.map((error, index) => (
                 <React.Fragment key={index}>
