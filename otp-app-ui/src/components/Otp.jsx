@@ -70,7 +70,7 @@ const Otp = ({ numInputs }) => {
 
     return (
         <div>
-            <h6 className='blue'>Verification code:</h6>
+            <h6 className='blue p-3'>Verification code:</h6>
             <div id="otp" className="inputs d-flex flex-row justify-content-center mt-2">
                 <OtpInput
                     otp={otp}
@@ -89,7 +89,7 @@ const Otp = ({ numInputs }) => {
             ))
             }
 
-            <div className="mt-4"> <button className="btn btn-danger px-4 validate" onClick={handleSubmit}>Submit</button> </div>
+            <div className="m-4"> <button className="btn btn-danger px-4 validate" onClick={handleSubmit}>Submit</button> </div>
         </div >
     )
 }
