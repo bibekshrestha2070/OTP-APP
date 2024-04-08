@@ -3,7 +3,7 @@ import cors from "cors";
 import apiRouter from "./routes/api.js";
 const app = express();
 var corsOptions = {
-    origin: ["https://otp-app-client.vercel.app", "http://localhost:3000"]
+    origin: ["https://otp-app-client.vercel.app", "http://127.0.0.1:5174"]
 };
 app.use(cors(corsOptions));
 
